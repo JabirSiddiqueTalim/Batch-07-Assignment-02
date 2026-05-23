@@ -11,5 +11,6 @@ const config ={
   port:process.env.PORT,
   secret:process.env.JWT_SECRET,
   refreshSecret:process.env.JWT_REFRESH_SECRET,
+  accessToken_key : process.env.ACCESSTOKEN_KEY,
 }
 export default config;
