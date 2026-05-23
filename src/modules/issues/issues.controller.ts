@@ -25,6 +25,8 @@ const createIssue = async (req: Request, res: Response) => {
 
   }
 };
+
+
 const getAllIssues = async (req: Request, res: Response) => {
   const { sort, type, status } = req.query;
   try {
@@ -46,6 +48,8 @@ const getAllIssues = async (req: Request, res: Response) => {
     });
   }
 };
+
+
 const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
 ) => {
   const id = req.params.id;
@@ -66,6 +70,7 @@ const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
     
   }
 };
+
 
 const updateIssue = async (req: Request, res: Response) => {
   const { role, id: userId } = req.user as IUser;
@@ -92,9 +97,34 @@ const updateIssue = async (req: Request, res: Response) => {
     });
   }
 };
+
+const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+  try {
+    const result = await issueService.deleteIssueFromDB(id as string);
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Issue not found to delete!",
+      });
+    }
+    res.status(200).json({
+      message: "Issue Deleted successfully",
+      success: true,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message,
+      error: error,
+    });
+  }
+};
+
+
 export const issueController = {
   createIssue,
   getAllIssues,
   getSingleIssue,
   updateIssue,
+  deleteIssue
 }
