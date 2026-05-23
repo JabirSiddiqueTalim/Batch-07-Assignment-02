@@ -35,7 +35,7 @@ const getAllIssues = async (req: Request, res: Response) => {
     );
     res.status(200).json({
       success: true,
-      //message: "",
+      // message: "",
       data: result,
     });
   } catch (error: any) {
@@ -51,8 +51,18 @@ const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
   const id = req.params.id;
   try {
     const result = await issueService.getSingleIssueFromDB(id as string);
+    res.status(200).json({
+      success: true,
+      // message: "",
+      data: result,
+    });
     
   } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: error,
+    });
     
   }
 };

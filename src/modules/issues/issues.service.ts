@@ -100,8 +100,16 @@ const getSingleIssueFromDB = async (id: string) => {
   }
   const user = reporterDetails.rows[0];
 
-  const result=reporterDetails;
-  console.log(reporterDetails)
+  const result = {
+    id: issue.rows[0].id,
+    title: issue.rows[0].title,
+    description: issue.rows[0].description,
+    type: issue.rows[0].type,
+    status: issue.rows[0].status,
+    reporter: user,
+    created_at: issue.rows[0].created_at,
+    updated_at: issue.rows[0].updated_at,
+  };
   return result;
 };
 
