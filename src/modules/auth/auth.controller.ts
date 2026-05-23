@@ -29,19 +29,19 @@ const signupUser=async(req:Request,res:Response)=>
   const {email, password} = req.body;
   try {
     const result = await authService.loginUserIntoDB(email as string, password as string)
-    const {accessToken ,user} = result;
-    console.log(accessToken ,user);
+    const {token ,user} = result;
+    // console.log(token ,user);
     res.status(200).json(
       {
         success: true,
         message:"Login successfully",
-        data: user
+        data: result
       }
     )
 
     
   } catch (error:any) {
-    res.status(500).json(
+    res.status(400).json(
       {
         message: error.message,
         error: error

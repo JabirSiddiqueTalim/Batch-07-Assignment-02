@@ -1,5 +1,6 @@
 import express from "express"
 import { authRouter } from "./modules/auth/auth.router";
+import { issueRouter } from "./modules/issues/issues.router";
 const app = express()
 
 app.use(express.json());
@@ -14,6 +15,6 @@ app.get('/', (req, res) => {
 })
 
 app.use("/api/auth",authRouter)
-
+app.use('/api/issues',issueRouter)
 
 export default app;

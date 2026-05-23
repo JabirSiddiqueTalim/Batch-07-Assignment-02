@@ -49,12 +49,12 @@ const loginUserIntoDB=async (email: string, password: string) => {
     role: user.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.accessToken_key as string, {
+  const token = jwt.sign(jwtPayload, config.accessToken_key as string, {
     expiresIn: "1d",
   });
   delete user.password;
 
-  return { accessToken, user };
+  return { token, user };
 };
 
 
