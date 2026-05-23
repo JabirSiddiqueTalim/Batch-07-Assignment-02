@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import type { IUser } from "./issues.interface";
 import { issueService } from "./issues.service";
 
@@ -8,21 +8,21 @@ const createIssue = async (req: Request, res: Response) => {
     const result = await issueService.createIssueIntoDB(req.body, user);
     res.status(201).json(
       {
-        success:true,
+        success: true,
         message: "Issue created successfully",
         data: result.rows[0]
       }
     )
-    
+
   } catch (error: any) {
     res.status(500).json(
       {
-        success:false,
+        success: false,
         message: error.message,
         error: error
       }
     )
-   
+
   }
 };
 const getAllIssues = async (req: Request, res: Response) => {
@@ -46,7 +46,18 @@ const getAllIssues = async (req: Request, res: Response) => {
     });
   }
 };
-export const issueController={
+const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
+) => {
+  const id = req.params.id;
+  try {
+    const result = await issueService.getSingleIssueFromDB(id as string);
+    
+  } catch (error: any) {
+    
+  }
+};
+export const issueController = {
   createIssue,
-  getAllIssues
+  getAllIssues,
+  getSingleIssue
 }
