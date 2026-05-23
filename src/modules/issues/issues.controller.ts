@@ -66,8 +66,35 @@ const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
     
   }
 };
+
+const updateIssue = async (req: Request, res: Response) => {
+  const { role, id: userId } = req.user as IUser;
+
+  const id = req.params.id;
+
+  try {
+    const result = await issueService.updateIssueIntoDB(
+      id as string,
+      userId,
+      role,
+      req.body,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Issue updated successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 export const issueController = {
   createIssue,
   getAllIssues,
-  getSingleIssue
+  getSingleIssue,
+  updateIssue,
 }
