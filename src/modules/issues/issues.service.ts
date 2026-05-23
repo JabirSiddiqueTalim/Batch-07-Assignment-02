@@ -33,7 +33,10 @@ const getAllIssuesFromDB = async (
     values.push(type);
     conditions.push(`type = $${values.length}`);
   }
-
+  if (status) {
+    values.push(status);
+    conditions.push(`status = $${values.length}`);
+  }
   if (conditions.length > 0) {
     query += ` WHERE ${conditions.join(" AND ")}`;
   }
