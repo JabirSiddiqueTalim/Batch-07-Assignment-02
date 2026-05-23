@@ -1,33 +1,26 @@
 import type { NextFunction, Request, Response } from "express";
 import type { IUser } from "./issues.interface";
 import { issueService } from "./issues.service";
+import sendResponse from "../../utility/sendResponse";
 
-const createIssue = async (req: Request, res: Response) => {
+const createIssue = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user as IUser;
   try {
     const result = await issueService.createIssueIntoDB(req.body, user);
-    res.status(201).json(
-      {
-        success: true,
-        message: "Issue created successfully",
-        data: result.rows[0]
-      }
-    )
-
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "Issue created successfully",
+      data: result.rows[0],
+    });
   } catch (error: any) {
-    res.status(500).json(
-      {
-        success: false,
-        message: error.message,
-        error: error
-      }
-    )
+    next(error);
 
   }
 };
 
 
-const getAllIssues = async (req: Request, res: Response) => {
+const getAllIssues = async (req: Request, res: Response, next: NextFunction) => {
   const { sort, type, status } = req.query;
   try {
     const result = await issueService.getAllIssuesFromDB(
@@ -35,17 +28,14 @@ const getAllIssues = async (req: Request, res: Response) => {
       type as string,
       status as string,
     );
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
-      // message: "",
+      message: "Issue retrived successfully",
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      error: error,
-    });
+    next(error);
   }
 };
 
@@ -55,24 +45,21 @@ const getSingleIssue = async (req: Request, res:Response, next:NextFunction,
   const id = req.params.id;
   try {
     const result = await issueService.getSingleIssueFromDB(id as string);
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
-      // message: "",
+      message: "Issue retrived successfully",
       data: result,
     });
     
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      error: error,
-    });
+    next(error);
     
   }
 };
 
 
-const updateIssue = async (req: Request, res: Response) => {
+const updateIssue = async (req: Request, res: Response, next: NextFunction) => {
   const { role, id: userId } = req.user as IUser;
 
   const id = req.params.id;
@@ -85,16 +72,14 @@ const updateIssue = async (req: Request, res: Response) => {
       req.body,
     );
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Issue updated successfully",
-      data: result,
+      error: Error,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -103,20 +88,20 @@ const deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await issueService.deleteIssueFromDB(id as string);
     if (result.rowCount === 0) {
-      res.status(404).json({
+      sendResponse(res, {
+        statusCode: 404,
         success: false,
-        message: "Issue not found to delete!",
+        message: "Issue not found to delete",
+        error: Error,
       });
     }
-    res.status(200).json({
-      message: "Issue Deleted successfully",
+    sendResponse(res, {
+      statusCode: 204,
       success: true,
+      message: "Issue Deleted successfully",
     });
   } catch (error: any) {
-    res.status(500).json({
-      message: error.message,
-      error: error,
-    });
+    next(error);
   }
 };
 
